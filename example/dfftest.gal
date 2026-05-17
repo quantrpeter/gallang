@@ -1,0 +1,10 @@
+// Equivalent to dff.pld: Q.R = D  (D flip-flop)
+// D = pin2, Q = pin23
+
+pins
+1=clock
+2=D
+23=Q
+
+logic
+Q.r = D
