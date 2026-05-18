@@ -1,0 +1,15 @@
+// multi_out.gal  — equivalent to multi_out.pld
+// Multiple combinatorial outputs
+// A=pin2, B=pin3, C=pin4, D=pin5
+// W=pin20, X=pin21, Y=pin22, Z=pin23
+
+pins
+1=Clock
+2=A  3=B  4=C  5=D
+20=W  21=X  22=Y  23=Z
+
+logic
+Z = A * B
+Y = A + B
+X = A * C + B * D
+W = A * B * C * D

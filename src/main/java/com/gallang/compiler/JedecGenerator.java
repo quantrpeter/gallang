@@ -76,6 +76,15 @@ public class JedecGenerator {
         int[]   ac1    = new int[10];   // AC1 per OLMC, default 0 (registered)
         boolean hasComb = false;
 
+        // Collect used OLMC indices to determine SP row encoding
+        Set<Integer> usedOlmcs = new java.util.TreeSet<>();
+        for (LogicCompiler.CompiledEquation eq : prog.equations) {
+            usedOlmcs.add(23 - eq.pin);
+        }
+        // galasm sets SP=all-ones for all used OLMCs except the one with the highest index
+        // (lowest pin number). That last OLMC's SP row stays all-zeros.
+        int lastUsedOlmc = usedOlmcs.isEmpty() ? -1 : ((java.util.TreeSet<Integer>) usedOlmcs).last();
+
         for (LogicCompiler.CompiledEquation eq : prog.equations) {
             int olmcIdx  = 23 - eq.pin;                  // 0 for pin 23 … 9 for pin 14
             int firstRow = firstPtRow(olmcIdx);
@@ -94,8 +103,10 @@ public class JedecGenerator {
                 encodePt(fuses, firstRow + i, sop.get(i), sigToPin);
             }
 
-            // SP row explicitly disabled (all-ones)
-            setRowAllOnes(fuses, spRow);
+            // SP row: all-ones for all used OLMCs except the last (highest index)
+            if (olmcIdx != lastUsedOlmc) {
+                setRowAllOnes(fuses, spRow);
+            }
 
             // Track config bits
             if (!eq.registered) {
@@ -103,6 +114,19 @@ public class JedecGenerator {
                 ac1[olmcIdx] = 1;
             }
             // registered outputs leave ac1[olmcIdx] = 0
+        }
+
+        // galasm extends AC1=1 beyond used OLMCs when outputs form a contiguous
+        // block starting at olmcIdx=0 (pin23). The extended range is 0..2*maxIdx-1.
+        if (hasComb && ac1[0] == 1) {
+            int maxCombIdx = 0;
+            for (int i = 9; i >= 0; i--) {
+                if (ac1[i] == 1) { maxCombIdx = i; break; }
+            }
+            int extendTo = 2 * maxCombIdx - 1;
+            for (int i = maxCombIdx + 1; i <= extendTo && i < 10; i++) {
+                ac1[i] = 1;
+            }
         }
 
         // Configuration bits
