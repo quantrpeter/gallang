@@ -11,14 +11,6 @@ public class AndExpr extends Expr {
     }
 
     @Override
-    public String toGalasm() {
-        // Parenthesise OR sub-expressions to preserve precedence
-        String l = (left  instanceof OrExpr) ? "(" + left.toGalasm()  + ")" : left.toGalasm();
-        String r = (right instanceof OrExpr) ? "(" + right.toGalasm() + ")" : right.toGalasm();
-        return l + " * " + r;
-    }
-
-    @Override
     public Expr inline(Map<String, Expr> intermediates) {
         return new AndExpr(left.inline(intermediates), right.inline(intermediates));
     }

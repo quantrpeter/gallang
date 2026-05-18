@@ -11,11 +11,6 @@ public class OrExpr extends Expr {
     }
 
     @Override
-    public String toGalasm() {
-        return left.toGalasm() + " + " + right.toGalasm();
-    }
-
-    @Override
     public Expr inline(Map<String, Expr> intermediates) {
         return new OrExpr(left.inline(intermediates), right.inline(intermediates));
     }
