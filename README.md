@@ -12,28 +12,32 @@ GALLANG compiles `.gal` source files directly to JEDEC `.jed` files ready to bur
 ## Table of Contents
 
 - [GALLANG](#gallang)
-	- [Table of Contents](#table-of-contents)
-	- [Target Device](#target-device)
-	- [Requirements](#requirements)
-	- [Build](#build)
-	- [Usage](#usage)
-	- [Language Reference](#language-reference)
-		- [File Structure](#file-structure)
-		- [Pins Section](#pins-section)
-		- [Logic Section](#logic-section)
-		- [Operators](#operators)
-		- [Intermediate Signals](#intermediate-signals)
-		- [Registered Outputs](#registered-outputs)
-	- [Examples](#examples)
-		- [AND / OR Combinatorial Logic](#and--or-combinatorial-logic)
-		- [D Flip-Flop (Registered Output)](#d-flip-flop-registered-output)
-		- [Mixed: Intermediate + Combinatorial](#mixed-intermediate--combinatorial)
-	- [Product Term Limits](#product-term-limits)
-	- [GAL22V10 Pin Map](#gal22v10-pin-map)
-	- [Programming the Device](#programming-the-device)
-	- [Project Architecture](#project-architecture)
-		- [Compilation Pipeline](#compilation-pipeline)
-		- [JEDEC Fuse Map (GAL22V10)](#jedec-fuse-map-gal22v10)
+  - [Table of Contents](#table-of-contents)
+  - [Target Device](#target-device)
+  - [Requirements](#requirements)
+  - [Build](#build)
+  - [Usage](#usage)
+  - [Language Reference](#language-reference)
+    - [File Structure](#file-structure)
+    - [Pins Section](#pins-section)
+    - [Logic Section](#logic-section)
+    - [Operators](#operators)
+    - [Intermediate Signals](#intermediate-signals)
+    - [Registered Outputs](#registered-outputs)
+  - [Examples](#examples)
+    - [AND / OR Combinatorial Logic](#and--or-combinatorial-logic)
+    - [D Flip-Flop (Registered Output)](#d-flip-flop-registered-output)
+    - [Mixed: Intermediate + Combinatorial](#mixed-intermediate--combinatorial)
+  - [Product Term Limits](#product-term-limits)
+  - [GAL22V10 Pin Map](#gal22v10-pin-map)
+  - [Programming the Device](#programming-the-device)
+  - [Project Architecture](#project-architecture)
+    - [Compilation Pipeline](#compilation-pipeline)
+    - [JEDEC Fuse Map (GAL22V10)](#jedec-fuse-map-gal22v10)
+      - [AND Array (fuses 0 – 5807)](#and-array-fuses-0--5807)
+      - [Configuration Bits (fuses 5808 – 5827)](#configuration-bits-fuses-5808--5827)
+      - [UES (fuses 5828 – 5891)](#ues-fuses-5828--5891)
+      - [Worked Example — Simple AND Gate](#worked-example--simple-and-gate)
 
 ---
 
@@ -399,4 +403,165 @@ The 5892-fuse array is structured as follows:
 | Config | 5808 – 5827 | SYN, AC0, AC1[9:0], XOR[8:1] |
 | UES | 5828 – 5891 | User Electronic Signature (64-bit label) |
 
+#### AND Array (fuses 0 – 5807)
+
+![AND array fuse map](image/and_array_fusemap.svg)
+
+The AND plane is a 132 × 44 matrix.  
+**Fuse address formula:** `fuse = row × 44 + column`
+
+**Row assignments:**
+
+| Row(s) | Description | Pin |
+|--------|-------------|-----|
+| 0 | AR — global asynchronous-reset product term | — |
+| 1 | OE — global output-enable (all-ones → always enabled) | — |
+| 2 – 9 | OLMC9: 8 product terms | 23 |
+| 10 | OLMC9: SP (synchronous preset) row | 23 |
+| 11 – 20 | OLMC8: 10 product terms | 22 |
+| 21 | OLMC8: SP row | 22 |
+| 22 – 33 | OLMC7: 12 product terms | 21 |
+| 34 | OLMC7: SP row | 21 |
+| 35 – 48 | OLMC6: 14 product terms | 20 |
+| 49 | OLMC6: SP row | 20 |
+| 50 – 65 | OLMC5: 16 product terms | 19 |
+| 66 | OLMC5: SP row | 19 |
+| 67 – 82 | OLMC4: 16 product terms | 18 |
+| 83 | OLMC4: SP row | 18 |
+| 84 – 97 | OLMC3: 14 product terms | 17 |
+| 98 | OLMC3: SP row | 17 |
+| 99 – 110 | OLMC2: 12 product terms | 16 |
+| 111 | OLMC2: SP row | 16 |
+| 112 – 121 | OLMC1: 10 product terms | 15 |
+| 122 | OLMC1: SP row | 15 |
+| 123 – 130 | OLMC0: 8 product terms | 14 |
+| 131 | OLMC0: SP row | 14 |
+
+> **Product-term rows** hold AND conditions. A fuse value of **0** means the signal is _connected_ to the AND gate; **1** means _disconnected_. An all-ones row is a disabled (don't-care) term. The JEDEC `*F0` default sets every fuse to 0 (all connected → X·/X = 0 per row = logic 0), so the compiler only needs to write the active rows.
+>
+> **SP rows** (synchronous-preset) are normally all-ones for every active combinatorial OLMC except the one on the lowest pin number used, which stays all-zeros.
+
+**Column assignments (44 columns per row):**
+
+Each signal is represented by a _true_ column (even) immediately followed by its _complement_ column (odd). A fuse of **0** connects that literal to the AND gate.
+
+| Columns | Signal | Physical pin |
+|---------|--------|-------------|
+| 0, 1 | CLK (true / complement) | 1 |
+| 2, 3 | O1 feedback (true / complement) | 23 |
+| 4, 5 | I1 (true / complement) | 2 |
+| 6, 7 | O2 feedback (true / complement) | 22 |
+| 8, 9 | I2 (true / complement) | 3 |
+| 10, 11 | O3 feedback (true / complement) | 21 |
+| 12, 13 | I3 (true / complement) | 4 |
+| 14, 15 | O4 feedback (true / complement) | 20 |
+| 16, 17 | I4 (true / complement) | 5 |
+| 18, 19 | O5 feedback (true / complement) | 19 |
+| 20, 21 | I5 (true / complement) | 6 |
+| 22, 23 | O6 feedback (true / complement) | 18 |
+| 24, 25 | I6 (true / complement) | 7 |
+| 26, 27 | O7 feedback (true / complement) | 17 |
+| 28, 29 | I7 (true / complement) | 8 |
+| 30, 31 | O8 feedback (true / complement) | 16 |
+| 32, 33 | I8 (true / complement) | 9 |
+| 34, 35 | O9 feedback (true / complement) | 15 |
+| 36, 37 | I9 (true / complement) | 10 |
+| 38, 39 | O10 feedback (true / complement) | 14 |
+| 40, 41 | I10 (true / complement) | 11 |
+| 42, 43 | I11 (true / complement) | 13 |
+
+> Output-feedback columns (2, 6, 10 …) carry the OLMC's registered or combinatorial output back into the AND plane, allowing the device to implement state machines or logic that depends on its own outputs.
+
+**Column address formula for a given pin:**
+
+```
+pin  1  (CLK)           → true col = 0
+pin  2–11  (inputs I1–I10) → true col = 4 × (pin − 1)
+pin  13  (input I11)    → true col = 42
+pin  14–23  (OLMC feedback) → true col = 94 − 4 × pin
+complement col           = true col + 1
+```
+
+**Worked example** — fuse for the true literal of pin 2 (I1) in the first product-term row of OLMC9 (pin 23):
+- Row = 2 (first PT row of OLMC9)
+- Column = 4 × (2 − 1) = 4
+- Fuse = 2 × 44 + 4 = **92**
+
+#### Configuration Bits (fuses 5808 – 5827)
+
+20 bits immediately after the AND array control the OLMC mode for each output:
+
+| Fuse | Bit name | Value | Meaning |
+|------|----------|-------|---------|
+| 5808 | SYN | 1 (always) | Synchronous mode — must always be 1 for GAL22V10 |
+| 5809 | AC0 | 1 if any combinatorial output, else 0 | Global combinatorial-enable flag |
+| 5810 | AC1[9] | 1 = combinatorial, 0 = registered | OLMC9 — pin 23 |
+| 5811 | AC1[8] | 1 = combinatorial, 0 = registered | OLMC8 — pin 22 |
+| 5812 | AC1[7] | 1 = combinatorial, 0 = registered | OLMC7 — pin 21 |
+| 5813 | AC1[6] | 1 = combinatorial, 0 = registered | OLMC6 — pin 20 |
+| 5814 | AC1[5] | 1 = combinatorial, 0 = registered | OLMC5 — pin 19 |
+| 5815 | AC1[4] | 1 = combinatorial, 0 = registered | OLMC4 — pin 18 |
+| 5816 | AC1[3] | 1 = combinatorial, 0 = registered | OLMC3 — pin 17 |
+| 5817 | AC1[2] | 1 = combinatorial, 0 = registered | OLMC2 — pin 16 |
+| 5818 | AC1[1] | 1 = combinatorial, 0 = registered | OLMC1 — pin 15 |
+| 5819 | AC1[0] | 1 = combinatorial, 0 = registered | OLMC0 — pin 14 |
+| 5820 | XOR[8] | 0 = active-high (gallang always 0) | Output polarity — pin 23 |
+| 5821 | XOR[7] | 0 = active-high | Output polarity — pin 22 |
+| 5822 | XOR[6] | 0 = active-high | Output polarity — pin 21 |
+| 5823 | XOR[5] | 0 = active-high | Output polarity — pin 20 |
+| 5824 | XOR[4] | 0 = active-high | Output polarity — pin 19 |
+| 5825 | XOR[3] | 0 = active-high | Output polarity — pin 18 |
+| 5826 | XOR[2] | 0 = active-high | Output polarity — pin 17 |
+| 5827 | XOR[1] | 0 = active-high | Output polarity — pin 16 |
+
+> **AC1 contiguous-block extension rule:** When the used combinatorial outputs form a contiguous block starting at pin 23 (OLMC indices 0 … N), the assembler also sets AC1=1 for OLMC indices up to `2N−1`. For example, 4 outputs at pins 20–23 (indices 0–3, N=3) causes indices 4 and 5 (pins 19 and 18) to be set as well. gallang replicates this behaviour for bit-exact compatibility.
+
+#### UES (fuses 5828 – 5891)
+
+64-bit User Electronic Signature — a free-form label burned into the device. gallang leaves these fuses at 0 (not written to the JEDEC file).
+
 Row 0 is the global async-reset PT; row 1 is the global output-enable PT. The 10 OLMCs (pins 23 down to 14) follow, each with their own product-term rows and a synchronous-preset row.
+
+#### Worked Example — Simple AND Gate
+
+Circuit: **Z = A & B** — output on pin 23 (OLMC9), input A on pin 2, input B on pin 3.
+
+**Step 1 — find the column addresses**
+
+The column formula for input pins 2–11 is `col = 4 × (pin − 1)` (true), `col + 1` (complement).
+
+| Signal | Column | Fuse convention |
+|--------|--------|-----------------|
+| A — pin 2, true | 4 | 0 = connected |
+| A — pin 2, complement | 5 | 1 = disconnected |
+| B — pin 3, true | 8 | 0 = connected |
+| B — pin 3, complement | 9 | 1 = disconnected |
+| all other 40 columns | — | 1 = disconnected |
+
+**Step 2 — find the row and fuse addresses**
+
+OLMC9 (pin 23) owns rows 2–9 (8 product terms) and SP row 10.
+
+| Row | Purpose | Fuse state |
+|-----|---------|------------|
+| 2 | **Z = A & B** | all 1s, **except fuse 92 (A true) = 0 and fuse 96 (B true) = 0** |
+| 3 – 9 | unused PTs | all 44 fuses = 0 (A & /A & … → always 0; contributes nothing to OR) |
+| 10 | SP (sync preset) | all 44 fuses = 0 (disabled) |
+
+```
+fuse = row × 44 + column
+fuse 92 = 2 × 44 + 4    ← A (pin 2 true)
+fuse 96 = 2 × 44 + 8    ← B (pin 3 true)
+```
+
+**Step 3 — configuration fuses**
+
+| Fuse | Name | Value | Reason |
+|------|------|-------|--------|
+| 5808 | SYN | 1 | combinatorial mode |
+| 5809 | AC0 | 1 | at least one combinatorial output |
+| 5810 – 5818 | AC1[9..1] | 0 | OLMCs 1–8 unused |
+| **5819** | **AC1[0]** | **1** | OLMC9 / pin 23 is combinatorial |
+| 5820 – 5827 | XOR[8..1] | 0 | no polarity inversion |
+
+**Complete set of 0-valued fuses for this circuit:** 92, 96, and 5819 — every other fuse in the 5828-fuse range is 1.
