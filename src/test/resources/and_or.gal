@@ -5,7 +5,7 @@
 pins
 1=Clock
 2=A  3=B
-22=Z  23=Y
+23=Y  22=Z
 
 logic
 Y = A * B

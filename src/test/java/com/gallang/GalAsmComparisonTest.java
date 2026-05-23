@@ -34,8 +34,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class GalAsmComparisonTest {
 
-    /** Absolute path to the gallang fat-jar produced by {@code mvn package}. */
-    private static Path GALLANG_JAR;
+    /** Classpath of the running JVM — reused to spawn the compiler subprocess. */
+    private static String CLASSPATH;
 
     /** Directory that holds the .gal / .pld test resource pairs. */
     private static Path RESOURCES_DIR;
@@ -57,12 +57,10 @@ class GalAsmComparisonTest {
         // Maven uses during 'mvn test' (= project root).
         Path projectRoot = Paths.get(System.getProperty("user.dir"));
 
-        GALLANG_JAR  = projectRoot.resolve("target/gallang.jar");
+        CLASSPATH     = System.getProperty("java.class.path");
         RESOURCES_DIR = projectRoot.resolve("src/test/resources");
         TMP_DIR       = Files.createTempDirectory("gallang_test_");
 
-        assertTrue(Files.exists(GALLANG_JAR),
-                "gallang.jar not found – run 'mvn package' first: " + GALLANG_JAR);
         assertTrue(Files.isDirectory(RESOURCES_DIR),
                 "Test resources directory not found: " + RESOURCES_DIR);
 
@@ -161,11 +159,11 @@ class GalAsmComparisonTest {
     }
 
     /**
-     * Runs our gallang compiler: {@code java -jar gallang.jar <galFile> <oursJed>}.
+     * Runs our gallang compiler: {@code java -cp <classpath> com.gallang.Main <galFile> <oursJed>}.
      */
     private static void runGallang(Path galFile, Path oursJed) throws IOException, InterruptedException {
         ProcessBuilder pb = new ProcessBuilder(
-                "java", "-jar", GALLANG_JAR.toAbsolutePath().toString(),
+                "java", "-cp", CLASSPATH, "com.gallang.Main",
                 galFile.toAbsolutePath().toString(),
                 oursJed.toAbsolutePath().toString());
         pb.redirectErrorStream(true);
