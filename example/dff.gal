@@ -1,0 +1,11 @@
+// dff.gal  — equivalent to dff.pld
+// D flip-flop: Q.R = D
+// D = pin 2, Q = pin 23
+
+pins
+1=Clock
+2=D
+23=Q
+
+logic
+Q.r = D

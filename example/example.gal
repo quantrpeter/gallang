@@ -1,8 +1,0 @@
-pins
-1=clock
-4=a  5=b  10=c
-23=out         // output pins must be 14-23
-
-logic
-z = a + b*c    // z is intermediate (inlined): a OR (b AND c)
-out = z        // out.R = z  for registered (D flip-flop)

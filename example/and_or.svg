@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="410" height="332">
+  <rect width="410" height="332" fill="#f8f9fa" rx="4"/>
+  <text x="20" y="18" font-family="sans-serif" font-size="13" font-weight="bold" fill="#374151">and_or — GAL22V10</text>
+  <rect x="20.0" y="51.0" width="60" height="24" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1.2"/>
+  <text x="50.0" y="63.0" text-anchor="middle" dominant-baseline="middle" font-family="monospace" font-size="12" fill="#14532d">A</text>
+  <rect x="20.0" y="105.0" width="60" height="24" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1.2"/>
+  <text x="50.0" y="117.0" text-anchor="middle" dominant-baseline="middle" font-family="monospace" font-size="12" fill="#14532d">B</text>
+  <polyline fill="none" stroke="#6b7280" stroke-width="1.5" points="80.0,63.0 110.0,63.0 110.0,82.5 140.0,82.5"/>
+  <polyline fill="none" stroke="#6b7280" stroke-width="1.5" points="80.0,117.0 110.0,117.0 110.0,97.5 140.0,97.5"/>
+  <rect x="140.0" y="75.0" width="60" height="30" rx="6" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.5"/>
+  <text x="170.0" y="90.0" text-anchor="middle" dominant-baseline="middle" font-family="sans-serif" font-size="11" font-weight="bold" fill="#1e3a8a">AND</text>
+  <polyline fill="none" stroke="#6b7280" stroke-width="1.5" points="200.0,90.0 245.0,90.0 245.0,90.0 290.0,90.0"/>
+  <line x1="290.0" y1="90.0" x2="305.0" y2="90.0" stroke="#6b7280" stroke-width="1.5"/>
+  <rect x="308.0" y="78.0" width="60" height="24" rx="4" fill="#f3e8ff" stroke="#7e22ce" stroke-width="1.2"/>
+  <text x="338.0" y="90.0" text-anchor="middle" dominant-baseline="middle" font-family="monospace" font-size="12" font-weight="bold" fill="#6b21a8">Y</text>
+  <rect x="20.0" y="203.0" width="60" height="24" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1.2"/>
+  <text x="50.0" y="215.0" text-anchor="middle" dominant-baseline="middle" font-family="monospace" font-size="12" fill="#14532d">A</text>
+  <rect x="20.0" y="257.0" width="60" height="24" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1.2"/>
+  <text x="50.0" y="269.0" text-anchor="middle" dominant-baseline="middle" font-family="monospace" font-size="12" fill="#14532d">B</text>
+  <polyline fill="none" stroke="#6b7280" stroke-width="1.5" points="80.0,215.0 110.0,215.0 110.0,234.5 140.0,234.5"/>
+  <polyline fill="none" stroke="#6b7280" stroke-width="1.5" points="80.0,269.0 110.0,269.0 110.0,249.5 140.0,249.5"/>
+  <rect x="140.0" y="227.0" width="60" height="30" rx="15" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <text x="170.0" y="242.0" text-anchor="middle" dominant-baseline="middle" font-family="sans-serif" font-size="11" font-weight="bold" fill="#92400e">OR</text>
+  <polyline fill="none" stroke="#6b7280" stroke-width="1.5" points="200.0,242.0 245.0,242.0 245.0,242.0 290.0,242.0"/>
+  <line x1="290.0" y1="242.0" x2="305.0" y2="242.0" stroke="#6b7280" stroke-width="1.5"/>
+  <rect x="308.0" y="230.0" width="60" height="24" rx="4" fill="#f3e8ff" stroke="#7e22ce" stroke-width="1.2"/>
+  <text x="338.0" y="242.0" text-anchor="middle" dominant-baseline="middle" font-family="monospace" font-size="12" font-weight="bold" fill="#6b21a8">Z</text>
+</svg>

@@ -22,3 +22,10 @@ dependency-reduced-pom.xml
 
 # VS Code
 .vscode/
+
+# galasm
+*.chp
+*.fus
+*.jed
+*.jed.ref
+*.pin

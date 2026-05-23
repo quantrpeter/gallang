@@ -1,0 +1,12 @@
+// and_or.gal  — equivalent to and_or.pld
+// Y = A AND B   (pin 23)
+// Z = A OR  B   (pin 22)
+
+pins
+1=Clock
+2=A  3=B
+23=Y  22=Z
+
+logic
+Y = A * B
+Z = A + B

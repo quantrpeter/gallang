@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="290" height="224">
+  <rect width="290" height="224" fill="#f8f9fa" rx="4"/>
+  <text x="20" y="18" font-family="sans-serif" font-size="13" font-weight="bold" fill="#374151">dff2 — GAL22V10</text>
+  <rect x="20.0" y="51.0" width="60" height="24" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1.2"/>
+  <text x="50.0" y="63.0" text-anchor="middle" dominant-baseline="middle" font-family="monospace" font-size="12" fill="#14532d">D</text>
+  <polyline fill="none" stroke="#6b7280" stroke-width="1.5" points="80.0,63.0 107.5,63.0 107.5,63.0 135.0,63.0"/>
+  <rect x="135.0" y="38.0" width="70" height="50" rx="4" fill="#fff7ed" stroke="#c2410c" stroke-width="1.8"/>
+  <text x="170.0" y="52.0" text-anchor="middle" dominant-baseline="middle" font-family="sans-serif" font-size="9" font-weight="bold" fill="#c2410c">DFF</text>
+  <text x="140.0" y="65.0" text-anchor="start" dominant-baseline="middle" font-family="monospace" font-size="10" fill="#555">D</text>
+  <text x="200.0" y="65.0" text-anchor="end" dominant-baseline="middle" font-family="monospace" font-size="10" fill="#555">Q</text>
+  <text x="137.0" y="82.0" font-family="sans-serif" font-size="7" fill="#9ca3af">&#x25B6;CLK</text>
+  <line x1="205.0" y1="63.0" x2="220.0" y2="63.0" stroke="#6b7280" stroke-width="1.5"/>
+  <rect x="223.0" y="51.0" width="60" height="24" rx="4" fill="#f3e8ff" stroke="#7e22ce" stroke-width="1.2"/>
+  <text x="253.0" y="63.0" text-anchor="middle" dominant-baseline="middle" font-family="monospace" font-size="12" font-weight="bold" fill="#6b21a8">Q</text>
+  <rect x="20.0" y="149.0" width="60" height="24" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1.2"/>
+  <text x="50.0" y="161.0" text-anchor="middle" dominant-baseline="middle" font-family="monospace" font-size="12" fill="#14532d">Q</text>
+  <polyline fill="none" stroke="#6b7280" stroke-width="1.5" points="80.0,161.0 107.5,161.0 107.5,161.0 135.0,161.0"/>
+  <rect x="135.0" y="136.0" width="70" height="50" rx="4" fill="#fff7ed" stroke="#c2410c" stroke-width="1.8"/>
+  <text x="170.0" y="150.0" text-anchor="middle" dominant-baseline="middle" font-family="sans-serif" font-size="9" font-weight="bold" fill="#c2410c">DFF</text>
+  <text x="140.0" y="163.0" text-anchor="start" dominant-baseline="middle" font-family="monospace" font-size="10" fill="#555">D</text>
+  <text x="200.0" y="163.0" text-anchor="end" dominant-baseline="middle" font-family="monospace" font-size="10" fill="#555">Q</text>
+  <text x="137.0" y="180.0" font-family="sans-serif" font-size="7" fill="#9ca3af">&#x25B6;CLK</text>
+  <line x1="205.0" y1="161.0" x2="220.0" y2="161.0" stroke="#6b7280" stroke-width="1.5"/>
+  <rect x="223.0" y="149.0" width="60" height="24" rx="4" fill="#f3e8ff" stroke="#7e22ce" stroke-width="1.2"/>
+  <text x="253.0" y="161.0" text-anchor="middle" dominant-baseline="middle" font-family="monospace" font-size="12" font-weight="bold" fill="#6b21a8">Q2</text>
+</svg>

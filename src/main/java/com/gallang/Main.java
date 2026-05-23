@@ -4,15 +4,18 @@ import com.gallang.ast.Program;
 import com.gallang.compiler.AstBuilder;
 import com.gallang.compiler.LogicCompiler;
 import com.gallang.compiler.JedecGenerator;
+import com.gallang.compiler.SvgGenerator;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.io.IOException;
 import java.nio.file.*;
+import java.util.ArrayList;
+import java.util.List;
 /**
  * gallang compiler entry point.
  *
- * Usage:  java -jar gallang.jar <input.gal> [output.jed]
+ * Usage:  java -jar gallang.jar <input.gal> [output.jed] [--svg]
  *
  * Pipeline:
  *   1. Parse .gal source with ANTLR
@@ -24,14 +27,26 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         if (args.length < 1) {
-            System.err.println("Usage: gallang <input.gal> [output.jed]");
+            System.err.println("Usage: gallang <input.gal> [output.jed] [--svg]");
             System.exit(1);
         }
 
-        Path   inputPath  = Paths.get(args[0]);
+        // ── Argument parsing ──────────────────────────────────────────────────
+        boolean    genSvg     = false;
+        List<String> positional = new ArrayList<>();
+        for (String arg : args) {
+            if (arg.equals("--svg")) genSvg = true;
+            else positional.add(arg);
+        }
+        if (positional.isEmpty()) {
+            System.err.println("Usage: gallang <input.gal> [output.jed] [--svg]");
+            System.exit(1);
+        }
+
+        Path   inputPath  = Paths.get(positional.get(0));
         String baseName   = inputPath.getFileName().toString().replaceFirst("\\.[^.]+$", "");
         Path   jedPath    = inputPath.resolveSibling(baseName + ".jed");
-        Path   outputJed  = args.length > 1 ? Paths.get(args[1]) : jedPath;
+        Path   outputJed  = positional.size() > 1 ? Paths.get(positional.get(1)) : jedPath;
 
         // ── 1. Parse ──────────────────────────────────────────────────────────
         String     source  = readFile(inputPath);
@@ -57,18 +72,25 @@ public class Main {
         Program program = (Program) new AstBuilder().visit(tree);
 
         // ── 3. Compile ────────────────────────────────────────────────────────
-        LogicCompiler.CompiledProgram compiled =
-                LogicCompiler.compile(program, baseName);
+        LogicCompiler.CompiledProgram compiled = LogicCompiler.compile(program, baseName);
 
         if (compiled.equations.isEmpty()) {
             System.err.println("Error: no valid output equations (output pins are 14-23).");
             System.exit(1);
         }
 
-        // ── 4. Generate JEDEC directly ────────────────────────────────────────
+        // ── 4. Generate JEDEC ─────────────────────────────────────────────
         String jedec = JedecGenerator.generate(compiled);
         Files.writeString(outputJed, jedec);
         System.out.println("Wrote JEDEC: " + outputJed);
+
+        // ── 5. Optionally generate SVG schematic ──────────────────────────────
+        if (genSvg) {
+            Path   svgPath = inputPath.resolveSibling(baseName + ".svg");
+            String svg     = SvgGenerator.generate(compiled);
+            Files.writeString(svgPath, svg);
+            System.out.println("Wrote SVG:   " + svgPath);
+        }
     }
 
     private static String readFile(Path p) {

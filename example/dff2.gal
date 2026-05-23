@@ -1,0 +1,14 @@
+// dff2.gal  — equivalent to dff2.pld
+// two d-flipflop chained together
+// D flip-flop: Q.R = D
+// D = pin 2, Q = pin 23
+
+pins
+1=Clock
+2=D
+23=Q
+22=Q2
+
+logic
+Q.r = D
+Q2.r = Q
